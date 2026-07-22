@@ -80,7 +80,14 @@
       "Bash(node -e \"const p=require.resolve\\('@restaurant-app/shared'\\); console.log\\(require\\('fs'\\).readFileSync\\(p,'utf8'\\).slice\\(0,300\\)\\)\")",
       "Bash(echo \"exit: $?\")",
       "Bash(node dist/src/index.js)",
-      "Bash(pkill -f \"node dist/src/index.js\")"
+      "Bash(pkill -f \"node dist/src/index.js\")",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(git ls-remote *)",
+      "Bash(openssl rand *)",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" --max-time 10 http://i13znfqryncx1wsrtpn5wczm.200.141.2.29.sslip.io/health)",
+      "Bash(git rm *)"
     ]
   }
 }
