@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no native enum support, so Role and OrderStatus are plain strings,
+// validated at the application layer against the sets in src/utils/enums.ts.
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         String
+  pushToken    String?
+  createdAt    DateTime @default(now())
+
+  restaurant   Restaurant?
+  riderProfile RiderProfile?
+  addresses    Address[]
+  orders       Order[]        @relation("CustomerOrders")
+  feedback     Feedback[]
+}
+
+model Restaurant {
+  id          String      @id @default(cuid())
+  ownerId     String      @unique
+  owner       User        @relation(fields: [ownerId], references: [id])
+  name        String
+  description String?
+  cuisine     String?
+  phone       String?
+  address     String
+  lat         Float
+  lng         Float
+  imageUrl    String?
+  isOpen      Boolean     @default(true)
+  rating      Float       @default(4.2)
+  deliveryFee      Float  @default(25)
+  discountPercent  Float  @default(0)
+  serviceRadiusKm  Float  @default(7)
+  createdAt   DateTime    @default(now())
+
+  menuItems   MenuItem[]
+  orders      Order[]
+  feedback    Feedback[]
+}
+
+model MenuItem {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  name         String
+  description  String?
+  price        Float
+  category     String
+  imageUrl     String?
+  isVeg        Boolean    @default(true)
+  isAvailable  Boolean    @default(true)
+  discountPercent Float   @default(0)
+  createdAt    DateTime   @default(now())
+
+  orderItems   OrderItem[]
+}
+
+model Address {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  label     String
+  line1     String
+  city      String
+  lat       Float
+  lng       Float
+  phone     String  @default("")
+  isDeleted Boolean @default(false)
+
+  orders    Order[]
+}
+
+model RiderProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  vehicleType String   @default("bike")
+  isAvailable Boolean  @default(false)
+  currentLat  Float?
+  currentLng  Float?
+  updatedAt   DateTime @updatedAt
+
+  orders      Order[]
+}
+
+model Order {
+  id                String       @id @default(cuid())
+  customerId        String
+  customer          User         @relation("CustomerOrders", fields: [customerId], references: [id])
+  restaurantId      String
+  restaurant        Restaurant   @relation(fields: [restaurantId], references: [id])
+  riderId           String?
+  rider             RiderProfile? @relation(fields: [riderId], references: [id])
+  deliveryAddressId String
+  deliveryAddress   Address      @relation(fields: [deliveryAddressId], references: [id])
+  status            String       @default("PLACED")
+  subtotal          Float
+  discountAmount    Float        @default(0)
+  deliveryFee        Float        @default(25)
+  total             Float
+  paymentMethod     String       @default("COD")
+  paymentStatus     String       @default("PENDING")
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  notes             String?
+  cutleryRequired   Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  items             OrderItem[]
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  name       String
+  price      Float
+  quantity   Int
+}
+
+model Feedback {
+  id           String     @id @default(cuid())
+  customerId   String
+  customer     User       @relation(fields: [customerId], references: [id])
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  message      String
+  createdAt    DateTime   @default(now())
+}
