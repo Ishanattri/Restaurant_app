@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import path from "path";
 import { createServer } from "http";
 import { Prisma } from "@prisma/client";
 import authRoutes from "./routes/auth.routes";
@@ -10,6 +9,7 @@ import addressRoutes from "./routes/address.routes";
 import orderRoutes from "./routes/order.routes";
 import feedbackRoutes from "./routes/feedback.routes";
 import { initSockets } from "./sockets";
+import { UPLOADS_DIR } from "./utils/paths";
 
 // Defense-in-depth: an async route handler that's missed asyncHandler (or a
 // rejection outside the request lifecycle) would otherwise crash the process.
@@ -22,7 +22,7 @@ const httpServer = createServer(app);
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads", express.static(UPLOADS_DIR));
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
