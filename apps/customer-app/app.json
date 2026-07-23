@@ -10,19 +10,47 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.ishanattri.customerapp",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBOYqogKLW0hsklR5ET6hPdghvGTSeL0XM"
+        }
+      },
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
-    ]
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "@react-native-google-signin/google-signin"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4c360b62-1699-4463-8175-e31ec0458426"
+      }
+    },
+    "owner": "ishanattri",
+    "updates": {
+      "url": "https://u.expo.dev/4c360b62-1699-4463-8175-e31ec0458426"
+    }
   }
 }

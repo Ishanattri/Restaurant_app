@@ -10,16 +10,46 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.ishanattri.restaurantapp",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBOYqogKLW0hsklR5ET6hPdghvGTSeL0XM"
+        }
+      },
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5322157b-6bd0-4365-9393-5ab1de869d03"
+      }
+    },
+    "owner": "ishanattri",
+    "updates": {
+      "url": "https://u.expo.dev/5322157b-6bd0-4365-9393-5ab1de869d03"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "@react-native-google-signin/google-signin"
+    ]
   }
 }

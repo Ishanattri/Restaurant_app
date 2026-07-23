@@ -62,6 +62,10 @@ export function createApiClient(baseURL: string) {
       const res = await client.post<{ token: string; user: User }>("/api/auth/login", data);
       return res.data;
     },
+    async googleAuth(data: { idToken: string; role?: Role }) {
+      const res = await client.post<{ token: string; user: User }>("/api/auth/google", data);
+      return res.data;
+    },
     async me() {
       const res = await client.get<{ user: User & { restaurant?: Restaurant; riderProfile?: unknown } }>(
         "/api/auth/me"

@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { apiErrorMessage, Button, colors, Input, spacing, typography } from "@restaurant-app/shared";
 import React, { useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { AuthStackParamList } from "../navigation/types";
@@ -9,11 +9,12 @@ import { AuthStackParamList } from "../navigation/types";
 type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
 export function LoginScreen({ navigation }: Props) {
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const [email, setEmail] = useState("customer@test.dev");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleLogin() {
     setError(undefined);
@@ -24,6 +25,18 @@ export function LoginScreen({ navigation }: Props) {
       setError(apiErrorMessage(err, "Could not log in"));
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleGoogle() {
+    setError(undefined);
+    setGoogleLoading(true);
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      setError(apiErrorMessage(err, "Could not sign in with Google"));
+    } finally {
+      setGoogleLoading(false);
     }
   }
 
@@ -53,6 +66,28 @@ export function LoginScreen({ navigation }: Props) {
           />
           {error ? <Text style={styles.error}>{error}</Text> : null}
           <Button title="Log in" onPress={handleLogin} loading={loading} disabled={!email || !password} />
+
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <TouchableOpacity
+            style={styles.googleButton}
+            onPress={handleGoogle}
+            disabled={googleLoading}
+            activeOpacity={0.8}
+          >
+            {googleLoading ? (
+              <ActivityIndicator color={colors.textPrimary} />
+            ) : (
+              <>
+                <Text style={styles.googleG}>G</Text>
+                <Text style={styles.googleText}>Continue with Google</Text>
+              </>
+            )}
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.footer} onPress={() => navigation.navigate("Register")}>
@@ -80,6 +115,22 @@ const styles = StyleSheet.create({
   },
   form: { gap: spacing.xs },
   error: { color: colors.danger, marginBottom: spacing.sm, textAlign: "center" },
+  dividerRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginVertical: spacing.md },
+  dividerLine: { flex: 1, height: 1, backgroundColor: colors.border },
+  dividerText: { ...typography.caption, color: colors.textSecondary },
+  googleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm,
+    height: 52,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  googleG: { fontSize: 20, fontWeight: "800", color: "#4285F4" },
+  googleText: { ...typography.body, fontWeight: "700", color: colors.textPrimary },
   footer: { marginTop: spacing.xl },
   footerText: { ...typography.body, textAlign: "center", color: colors.textSecondary },
   footerLink: { color: colors.primary, fontWeight: "700" },

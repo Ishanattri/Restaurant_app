@@ -10,16 +10,46 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.ishanattri.riderapp",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBOYqogKLW0hsklR5ET6hPdghvGTSeL0XM"
+        }
+      },
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3cb00c29-9c9a-4967-b120-7ffb1fe28ad9"
+      }
+    },
+    "owner": "ishanattri",
+    "updates": {
+      "url": "https://u.expo.dev/3cb00c29-9c9a-4967-b120-7ffb1fe28ad9"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "@react-native-google-signin/google-signin"
+    ]
   }
 }
